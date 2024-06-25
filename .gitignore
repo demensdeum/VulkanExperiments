@@ -1,4 +1,6 @@
 # Prerequisites
+red-triangle.app
+*.spv
 *.d
 
 # Compiled Object files
