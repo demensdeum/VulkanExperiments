@@ -32,19 +32,16 @@ using std::string;
 using std::to_string;
 using std::vector;
 
-#define VULKAN_VALIDATION 0
+#define VULKAN_VALIDATION 1
 
-// Config
-//////////////////////////////////////////////////////////////////////////////////
-
-const char appName[] = u8"Hello Vulkan Triangle";
+const char *appName = "Hello Vulkan Triangle";
 
 // layers and debug
 #if VULKAN_VALIDATION
 	constexpr VkDebugUtilsMessageSeverityFlagsEXT debugSeverity =
 		0
-		//| VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT
-		//| VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT
+		| VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT
+		| VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT
 		| VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT
 		| VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT
 	;
@@ -190,7 +187,7 @@ VkPipeline initPipeline(
 void killPipeline( VkDevice device, VkPipeline pipeline );
 
 
-void setVertexData( VkDevice device, VkDeviceMemory memory, vector<Vertex3D_ColorF_pack> vertices );
+void setVertexData( VkDevice device, VkDeviceMemory memory, vector<Vertex3D_UV> vertices );
 
 VkSemaphore initSemaphore( VkDevice device );
 vector<VkSemaphore> initSemaphores( VkDevice device, size_t count );
@@ -268,10 +265,10 @@ int helloTriangle() try{
 	const uint32_t vertexBufferBinding = 0;
 
 	const float triangleSize = 1.6f;
-	const vector<Vertex3D_ColorF_pack> triangle = {
-		{{{ 0.5f * triangleSize,  sqrtf(3.0f) * 0.25f * triangleSize, 0.f}}, {{1.0f, 0.0f, 0.0f}}},
-		{{{                0.0f, -sqrtf(3.0f) * 0.25f * triangleSize, 0.f}}, {{0.0f, 1.0f, 0.0f}}},
-		{{{-0.5f * triangleSize,  sqrtf(3.0f) * 0.25f * triangleSize, 0.f}}, {{0.0f, 0.0f, 1.0f}}}
+	const vector<Vertex3D_UV> triangle = {
+		{{{ 0.5f * triangleSize,  sqrtf(3.0f) * 0.25f * triangleSize, 0.f}}, {{1.0f, 0.0f}}},
+		{{{                0.0f, -sqrtf(3.0f) * 0.25f * triangleSize, 0.f}}, {{0.0f, 1.0f}}},
+		{{{-0.5f * triangleSize,  sqrtf(3.0f) * 0.25f * triangleSize, 0.f}}, {{0.0f, 0.0f}}}
 	};
 
 	const auto supportedLayers = enumerate<VkInstance, VkLayerProperties>();
@@ -303,17 +300,19 @@ int helloTriangle() try{
     }
     
     std::vector<const char*> supportedInstanceExtensions(sdlExtensionCount);
-    supportedInstanceExtensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
     if (!SDL_Vulkan_GetInstanceExtensions(window, &sdlExtensionCount, supportedInstanceExtensions.data())) {
         throw std::runtime_error("failed to get SDL Vulkan extensions");
     }
 
-	// const auto supportedInstanceExtensions = getSupportedInstanceExtensions( requestedLayers );
-	// const auto platformSurfaceExtension = getPlatformSurfaceExtensionName();
-	// vector<const char*> requestedInstanceExtensions = {
-	// 	VK_KHR_SURFACE_EXTENSION_NAME,
-	// 	platformSurfaceExtension.c_str()
-	// };
+// #include <X11/Xlib.h>
+// #include <X11/Xutil.h>
+
+// 	const auto supportedInstanceExtensions = getSupportedInstanceExtensions( requestedLayers );
+// 	const auto platformSurfaceExtension = VK_KHR_XLIB_SURFACE_EXTENSION_NAME;
+// 	vector<const char*> requestedInstanceExtensions = {
+// 		VK_KHR_SURFACE_EXTENSION_NAME,
+// 		platformSurfaceExtension.c_str()
+// 	};
 
 #if VULKAN_VALIDATION
 	DebugObjectType debugExtensionTag;
@@ -329,15 +328,15 @@ int helloTriangle() try{
         throw std::runtime_error("failed to get SDL Vulkan extensions");
     }
 
-	// if(  isExtensionSupported( VK_EXT_DEBUG_UTILS_EXTENSION_NAME, supportedInstanceExtensions )  ){
-	// 	debugExtensionTag = DebugObjectType::debugUtils;
-	// 	requestedInstanceExtensions.push_back( VK_EXT_DEBUG_UTILS_EXTENSION_NAME );
-	// }
-	// else if(  isExtensionSupported( VK_EXT_DEBUG_REPORT_EXTENSION_NAME, supportedInstanceExtensions )  ){
-	// 	debugExtensionTag = DebugObjectType::debugReport;
-	// 	requestedInstanceExtensions.push_back( VK_EXT_DEBUG_REPORT_EXTENSION_NAME );
-	// }
-	// else throw "VULKAN_VALIDATION is enabled but neither VK_EXT_debug_utils nor VK_EXT_debug_report extension is supported!";
+	if(  true  ){
+		debugExtensionTag = DebugObjectType::debugUtils;
+		requestedInstanceExtensions.push_back( VK_EXT_DEBUG_UTILS_EXTENSION_NAME );
+	}
+	else if(  true  ){
+		debugExtensionTag = DebugObjectType::debugReport;
+		requestedInstanceExtensions.push_back( VK_EXT_DEBUG_REPORT_EXTENSION_NAME );
+	}
+	else throw "VULKAN_VALIDATION is enabled but neither VK_EXT_debug_utils nor VK_EXT_debug_report extension is supported!";
 #else
     uint32_t requestedExtensionCount = 0;
     if (!SDL_Vulkan_GetInstanceExtensions(window, &requestedExtensionCount, nullptr)) {
@@ -385,10 +384,6 @@ int helloTriangle() try{
 	}
 #endif
 
-
-	//const PlatformWindow window = initWindow( ::appName, ::initialWindowWidth, ::initialWindowHeight );
-	//const VkSurfaceKHR surface = initSurface( instance, window );
-
     VkSurfaceKHR surface;
     SDL_Vulkan_CreateSurface(window, instance, &surface);
 
@@ -409,16 +404,6 @@ int helloTriangle() try{
 
 	VkSurfaceFormatKHR surfaceFormat = getSurfaceFormat( physicalDevice, surface );
 	VkRenderPass renderPass = initRenderPass( device, surfaceFormat );
-
-// 	vector<uint32_t> vertexShaderBinary = {
-// #include "shaders/hello_triangle.vert.spv.inl"
-// 	};
-// 	vector<uint32_t> fragmentShaderBinary = {
-// #include "shaders/hello_triangle.frag.spv.inl"
-// 	};
-
-	// VkShaderModule vertexShader = initShaderModule( device, vertexShaderBinary );
-	// VkShaderModule fragmentShader = initShaderModule( device, fragmentShaderBinary );
 
     auto vertexShaderCode = readFile("vertexShader.spv");
     auto fragShaderCode = readFile("fragmentShader.spv");
@@ -476,8 +461,6 @@ int helloTriangle() try{
 		VkSurfaceCapabilitiesKHR capabilities = getSurfaceCapabilities( physicalDevice, surface );
 
 		if( capabilities.currentExtent.width == UINT32_MAX && capabilities.currentExtent.height == UINT32_MAX ){
-			// capabilities.currentExtent.width = getWindowWidth( window );
-			// capabilities.currentExtent.height = getWindowHeight( window );
 			capabilities.currentExtent.width = screenWidth;
 			capabilities.currentExtent.height = screenHeight;
 		}
@@ -605,15 +588,6 @@ int helloTriangle() try{
 			else throw;
 		}
 	};
-
-
-	// setSizeEventHandler( recreateSwapchain );
-	// setPaintEventHandler( render );
-
-
-	// Finally start the main message loop (and so render too)
-	// showWindow( window );
-	// int exitStatus = messageLoop( window );
 
 	recreateSwapchain();
 
@@ -1628,7 +1602,7 @@ VkPipeline initPipeline(
 		}
 	};
 
-	const uint32_t vertexBufferStride = sizeof( Vertex3D_ColorF_pack );
+	const uint32_t vertexBufferStride = sizeof( Vertex3D_UV );
 	if( vertexBufferBinding > limits.maxVertexInputBindings ){
 		throw string("Implementation does not allow enough input bindings. Needed: ")
 		    + to_string( vertexBufferBinding ) + string(", max: ")
@@ -1643,7 +1617,7 @@ VkPipeline initPipeline(
 
 	VkVertexInputBindingDescription vertexInputBindingDescription{
 		vertexBufferBinding,
-		sizeof( Vertex3D_ColorF_pack ), // stride in bytes
+		sizeof( Vertex3D_UV ), // stride in bytes
 		VK_VERTEX_INPUT_RATE_VERTEX
 	};
 
@@ -1658,7 +1632,7 @@ VkPipeline initPipeline(
 	if( colorLocation >= limits.maxVertexInputAttributes ){
 		throw "Implementation does not allow enough input attributes.";
 	}
-	if(offsetof( Vertex3D_ColorF_pack, color ) > limits.maxVertexInputAttributeOffset ){
+	if(offsetof( Vertex3D_UV, uv) > limits.maxVertexInputAttributeOffset ){
 		throw "Implementation does not allow sufficient attribute offset.";
 	}
 
@@ -1666,14 +1640,14 @@ VkPipeline initPipeline(
 		positionLocation,
 		vertexBufferBinding,
 		VK_FORMAT_R32G32B32_SFLOAT,
-		offsetof(Vertex3D_ColorF_pack, position ) // offset in bytes
+		offsetof(Vertex3D_UV, position)
 	};
 
 	VkVertexInputAttributeDescription colorInputAttributeDescription{
 		colorLocation,
 		vertexBufferBinding,
 		VK_FORMAT_R32G32B32_SFLOAT,
-		offsetof(Vertex3D_ColorF_pack, color ) // offset in bytes
+		offsetof(Vertex3D_UV, uv)
 	};
 
 	vector<VkVertexInputAttributeDescription> inputAttributeDescriptions = {
@@ -1813,7 +1787,7 @@ void killPipeline( VkDevice device, VkPipeline pipeline ){
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void setVertexData( VkDevice device, VkDeviceMemory memory, vector<Vertex3D_ColorF_pack> vertices ){
+void setVertexData( VkDevice device, VkDeviceMemory memory, vector<Vertex3D_UV> vertices ){
 	TODO( "Should be in Device Local memory instead" )
 	setMemoryData(  device, memory, vertices.data(), sizeof( decltype(vertices)::value_type ) * vertices.size()  );
 }

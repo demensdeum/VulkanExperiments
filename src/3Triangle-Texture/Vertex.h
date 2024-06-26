@@ -1,19 +1,14 @@
-// Basic vertex data definitions
-
-#ifndef COMMON_VERTEX_H
-#define COMMON_VERTEX_H
+#pragma once
 
 struct Vertex3D{
 	float position[3];
 };
 
-struct ColorF{
-	float color[3];
+struct UV{
+	float uv[2];
 };
 
-struct Vertex3D_ColorF_pack{
+struct Vertex3D_UV{
 	Vertex3D position;
-	ColorF color;
+	UV uv;
 };
-
-#endif //COMMON_VERTEX_H

@@ -1,9 +1,10 @@
 #version 450
 
-layout (location = 0) smooth in vec3 inColor;
+layout (location = 0) smooth in vec2 uv;
+layout(set = 0, binding = 0) uniform sampler2D textureSampler;
 
-layout (location = 0) out vec4 outFragColor;
+layout (location = 0) out vec4 outColor;
 
 void main(){
-	outFragColor = vec4( inColor, 1.0 );
+	 outColor = texture(textureSampler, uv);
 }

@@ -181,7 +181,8 @@ DebugObjectVariant initDebug( const VkInstance instance, const DebugObjectType d
 			nullptr // pUserData
 		};
 
-		const VkResult errorCode = vkCreateDebugReportCallbackEXT( instance, &debugCreateInfo, nullptr, &debug.debugReportCallback ); RESULT_HANDLER( errorCode, "vkCreateDebugReportCallbackEXT" );
+		const VkResult errorCode = vkCreateDebugReportCallbackEXT(instance, &debugCreateInfo, nullptr, &debug.debugReportCallback ); 
+		RESULT_HANDLER( errorCode, "vkCreateDebugReportCallbackEXT" );
 	}
 	else{
 		throw "initDebug: unknown debug extension";

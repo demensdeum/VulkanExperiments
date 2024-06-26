@@ -62,7 +62,9 @@ void loadInstanceExtensionsCommands( const VkInstance instance, const std::vecto
 
 	for( const auto e : instanceExtensions ){
 		if( strcmp( e, VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME ) == 0 ) loadPDProps2Commands( instance );
-		if( strcmp( e, VK_EXT_DEBUG_REPORT_EXTENSION_NAME ) == 0 ) loadDebugReportCommands( instance );
+		if( strcmp( e, VK_EXT_DEBUG_REPORT_EXTENSION_NAME ) == 0 ) { 
+			    loadDebugReportCommands( instance ); 
+		} 
 		if( strcmp( e, VK_EXT_DEBUG_UTILS_EXTENSION_NAME ) == 0 ) loadDebugUtilsCommands( instance );
 		if( strcmp( e, VK_KHR_EXTERNAL_MEMORY_CAPABILITIES_EXTENSION_NAME ) == 0 ) loadExternalMemoryCapsCommands( instance );
 		// ...
@@ -220,23 +222,23 @@ std::unordered_map< VkInstance, PFN_vkCreateDebugReportCallbackEXT > CreateDebug
 std::unordered_map< VkInstance, PFN_vkDestroyDebugReportCallbackEXT > DestroyDebugReportCallbackEXTDispatchTable;
 std::unordered_map< VkInstance, PFN_vkDebugReportMessageEXT > DebugReportMessageEXTDispatchTable;
 
-void loadDebugReportCommands( VkInstance instance ){
+void loadDebugReportCommands(VkInstance instance){
 	PFN_vkVoidFunction temp_fp;
 
-	temp_fp = vkGetInstanceProcAddr( instance, "vkCreateDebugReportCallbackEXT" );
+	temp_fp = vkGetInstanceProcAddr(instance, "vkCreateDebugReportCallbackEXT" );
 	if( !temp_fp ) throw "Failed to load vkCreateDebugReportCallbackEXT"; // check shouldn't be necessary (based on spec)
 	CreateDebugReportCallbackEXTDispatchTable[instance] = reinterpret_cast<PFN_vkCreateDebugReportCallbackEXT>( temp_fp );
 
-	temp_fp = vkGetInstanceProcAddr( instance, "vkDestroyDebugReportCallbackEXT" );
+	temp_fp = vkGetInstanceProcAddr(instance, "vkDestroyDebugReportCallbackEXT" );
 	if( !temp_fp ) throw "Failed to load vkDestroyDebugReportCallbackEXT"; // check shouldn't be necessary (based on spec)
 	DestroyDebugReportCallbackEXTDispatchTable[instance] = reinterpret_cast<PFN_vkDestroyDebugReportCallbackEXT>( temp_fp );
 
-	temp_fp = vkGetInstanceProcAddr( instance, "vkDebugReportMessageEXT" );
+	temp_fp = vkGetInstanceProcAddr(instance, "vkDebugReportMessageEXT" );
 	if( !temp_fp ) throw "Failed to load vkDebugReportMessageEXT"; // check shouldn't be necessary (based on spec)
 	DebugReportMessageEXTDispatchTable[instance] = reinterpret_cast<PFN_vkDebugReportMessageEXT>( temp_fp );
 }
 
-void unloadDebugReportCommands( VkInstance instance ){
+void unloadDebugReportCommands(VkInstance instance){
 	CreateDebugReportCallbackEXTDispatchTable.erase( instance );
 	DestroyDebugReportCallbackEXTDispatchTable.erase( instance );
 	DebugReportMessageEXTDispatchTable.erase( instance );
@@ -248,6 +250,9 @@ VKAPI_ATTR VkResult VKAPI_CALL vkCreateDebugReportCallbackEXT(
 	const VkAllocationCallbacks* pAllocator,
 	VkDebugReportCallbackEXT* pCallback
 ){
+	if (CreateDebugReportCallbackEXTDispatchTable.size() <1) {
+		throw std::runtime_error("CreateDebugReportCallbackEXTDispatchTable.size() < 1");
+	}
 	auto dispatched_cmd = CreateDebugReportCallbackEXTDispatchTable.at( instance );
 	return dispatched_cmd( instance, pCreateInfo, pAllocator, pCallback );
 }
