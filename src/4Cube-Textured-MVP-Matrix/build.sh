@@ -1,5 +1,5 @@
 clear
-rm triangle.app
+rm cube.app
 rm vertexShader.spv
 rm fragmentShader.spv 
 glslc vertexShader.vert -o vertexShader.spv 
@@ -14,5 +14,5 @@ if [ $? -eq 0 ]; then
 else
     exit 1
 fi
-clang++ main.cpp -g -lvulkan -lSDL2 -o triangle.app
-./triangle.app
+clang++ main.cpp -g -lvulkan -lSDL2 -o cube.app
+./cube.app
