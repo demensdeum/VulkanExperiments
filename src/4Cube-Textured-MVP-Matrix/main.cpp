@@ -323,47 +323,61 @@ int start() try{
 	const uint32_t vertexBufferBinding = 0;
 
 	const std::vector<Vertex3D_UV> triangle = {
-    {{{-1.0f,  1.0f, -1.0f}}, {{0.0f, 1.0f}}},
-    {{{ 1.0f,  1.0f, -1.0f}}, {{1.0f, 0.0f}}},
-    {{{ 1.0f,  1.0f,  1.0f}}, {{1.0f, 0.0f}}},
-    {{{ 1.0f,  1.0f,  1.0f}}, {{1.0f, 0.0f}}},
-    {{{-1.0f,  1.0f,  1.0f}}, {{0.0f, 0.0f}}},
-    {{{-1.0f,  1.0f, -1.0f}}, {{0.0f, 1.0f}}},
 
-    {{{-1.0f, -1.0f, -1.0f}}, {{0.0f, 1.0f}}},
-    {{{ 1.0f, -1.0f, -1.0f}}, {{1.0f, 0.0f}}},
-    {{{ 1.0f, -1.0f,  1.0f}}, {{1.0f, 0.0f}}},
-    {{{ 1.0f, -1.0f,  1.0f}}, {{1.0f, 0.0f}}},
-    {{{-1.0f, -1.0f,  1.0f}}, {{0.0f, 0.0f}}},
-    {{{-1.0f, -1.0f, -1.0f}}, {{0.0f, 1.0f}}},
+// Front face - два треугольника
+{{{-1.0f, -1.0f,  1.0f}}, {{0.0f, 1.0f}}}, // Bottom left
+{{{ 1.0f, -1.0f,  1.0f}}, {{1.0f, 1.0f}}}, // Bottom right
+{{{ 1.0f,  1.0f,  1.0f}}, {{1.0f, 0.0f}}}, // Top right
 
-    {{{-1.0f, -1.0f,  1.0f}}, {{0.0f, 0.0f}}},
-    {{{ 1.0f, -1.0f,  1.0f}}, {{1.0f, 0.0f}}},
-    {{{ 1.0f,  1.0f,  1.0f}}, {{1.0f, 1.0f}}},
-    {{{ 1.0f,  1.0f,  1.0f}}, {{1.0f, 1.0f}}},
-    {{{-1.0f,  1.0f,  1.0f}}, {{0.0f, 1.0f}}},
-    {{{-1.0f, -1.0f,  1.0f}}, {{0.0f, 0.0f}}},
+{{{-1.0f, -1.0f,  1.0f}}, {{0.0f, 1.0f}}}, // Bottom left
+{{{ 1.0f,  1.0f,  1.0f}}, {{1.0f, 0.0f}}}, // Top right
+{{{-1.0f,  1.0f,  1.0f}}, {{0.0f, 0.0f}}}, // Top left
 
-    {{{-1.0f, -1.0f, -1.0f}}, {{0.0f, 0.0f}}},
-    {{{ 1.0f, -1.0f, -1.0f}}, {{1.0f, 0.0f}}},
-    {{{ 1.0f,  1.0f, -1.0f}}, {{1.0f, 1.0f}}},
-    {{{ 1.0f,  1.0f, -1.0f}}, {{1.0f, 1.0f}}},
-    {{{-1.0f,  1.0f, -1.0f}}, {{0.0f, 1.0f}}},
-    {{{-1.0f, -1.0f, -1.0f}}, {{0.0f, 0.0f}}},
+// Back face - два треугольника (reverse texture coordinates)
+{{{ 1.0f, -1.0f, -1.0f}}, {{1.0f, 1.0f}}}, // Bottom right
+{{{-1.0f, -1.0f, -1.0f}}, {{0.0f, 1.0f}}}, // Bottom left
+{{{-1.0f,  1.0f, -1.0f}}, {{0.0f, 0.0f}}}, // Top left
 
-    {{{-1.0f, -1.0f, -1.0f}}, {{0.0f, 0.0f}}},
-    {{{-1.0f, -1.0f,  1.0f}}, {{1.0f, 0.0f}}},
-    {{{-1.0f,  1.0f,  1.0f}}, {{1.0f, 1.0f}}},
-    {{{-1.0f,  1.0f,  1.0f}}, {{1.0f, 1.0f}}},
-    {{{-1.0f,  1.0f, -1.0f}}, {{0.0f, 1.0f}}},
-    {{{-1.0f, -1.0f, -1.0f}}, {{0.0f, 0.0f}}},
+{{{ 1.0f, -1.0f, -1.0f}}, {{1.0f, 1.0f}}}, // Bottom right
+{{{-1.0f,  1.0f, -1.0f}}, {{0.0f, 0.0f}}}, // Top left
+{{{ 1.0f,  1.0f, -1.0f}}, {{1.0f, 0.0f}}}, // Top right
 
-    {{{ 1.0f, -1.0f, -1.0f}}, {{0.0f, 0.0f}}},
-    {{{ 1.0f, -1.0f,  1.0f}}, {{1.0f, 0.0f}}},
-    {{{ 1.0f,  1.0f,  1.0f}}, {{1.0f, 1.0f}}},
-    {{{ 1.0f,  1.0f,  1.0f}}, {{1.0f, 1.0f}}},
-    {{{ 1.0f,  1.0f, -1.0f}}, {{0.0f, 1.0f}}},
-    {{{ 1.0f, -1.0f, -1.0f}}, {{0.0f, 0.0f}}}
+// Left face - два треугольника
+{{{-1.0f, -1.0f, -1.0f}}, {{0.0f, 1.0f}}}, // Bottom front
+{{{-1.0f, -1.0f,  1.0f}}, {{1.0f, 1.0f}}}, // Bottom back
+{{{-1.0f,  1.0f,  1.0f}}, {{1.0f, 0.0f}}}, // Top back
+
+{{{-1.0f, -1.0f, -1.0f}}, {{0.0f, 1.0f}}}, // Bottom front
+{{{-1.0f,  1.0f,  1.0f}}, {{1.0f, 0.0f}}}, // Top back
+{{{-1.0f,  1.0f, -1.0f}}, {{0.0f, 0.0f}}}, // Top front
+
+// Right face - два треугольника
+{{{ 1.0f, -1.0f,  1.0f}}, {{0.0f, 1.0f}}}, // Bottom front
+{{{ 1.0f, -1.0f, -1.0f}}, {{1.0f, 1.0f}}}, // Bottom back
+{{{ 1.0f,  1.0f, -1.0f}}, {{1.0f, 0.0f}}}, // Top back
+
+{{{ 1.0f, -1.0f,  1.0f}}, {{0.0f, 1.0f}}}, // Bottom front
+{{{ 1.0f,  1.0f, -1.0f}}, {{1.0f, 0.0f}}}, // Top back
+{{{ 1.0f,  1.0f,  1.0f}}, {{0.0f, 0.0f}}}, // Top front
+
+// Top face - два треугольника
+{{{-1.0f,  1.0f,  1.0f}}, {{0.0f, 1.0f}}}, // Front left
+{{{ 1.0f,  1.0f,  1.0f}}, {{1.0f, 1.0f}}}, // Front right
+{{{ 1.0f,  1.0f, -1.0f}}, {{1.0f, 0.0f}}}, // Back right
+
+{{{-1.0f,  1.0f,  1.0f}}, {{0.0f, 1.0f}}}, // Front left
+{{{ 1.0f,  1.0f, -1.0f}}, {{1.0f, 0.0f}}}, // Back right
+{{{-1.0f,  1.0f, -1.0f}}, {{0.0f, 0.0f}}}, // Back left
+
+// Bottom face - два треугольника
+{{{-1.0f, -1.0f, -1.0f}}, {{0.0f, 1.0f}}}, // Front left
+{{{ 1.0f, -1.0f, -1.0f}}, {{1.0f, 1.0f}}}, // Front right
+{{{ 1.0f, -1.0f,  1.0f}}, {{1.0f, 0.0f}}}, // Back right
+
+{{{-1.0f, -1.0f, -1.0f}}, {{0.0f, 1.0f}}}, // Front left
+{{{ 1.0f, -1.0f,  1.0f}}, {{1.0f, 0.0f}}}, // Back right
+{{{-1.0f, -1.0f,  1.0f}}, {{0.0f, 0.0f}}}  // Back left
+
 	};
 
 	const auto supportedLayers = enumerate<VkInstance, VkLayerProperties>();
@@ -1089,12 +1103,12 @@ void updateUniformBuffer(VkDeviceMemory uniformBufferMemory, VkDevice device) {
     float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
 	glm::mat4 model = glm::mat4(1.f);
-	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -4.0f));
-	model = glm::rotate(model, time * glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -10.0f));
+	model = glm::rotate(model, time * glm::radians(90.0f), glm::vec3(0.5f, 1.0f, 0.4f));
 	glm::mat4 view = glm::mat4(1.f);
 
 	float aspect = (float) screenWidth / (float) screenHeight;
-    glm::mat4 proj = glm::perspective(glm::radians(45.0f), aspect, 0.1f, 10.0f);
+    glm::mat4 proj = glm::perspective(glm::radians(45.0f), aspect, 0.001f, 100000.0f);
     proj[1][1] *= -1; // Invert Y coordinate for Vulkan
 
     UniformBufferObject ubo{};
@@ -2054,6 +2068,10 @@ VkRenderPass initRenderPass(
 		VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
 	};
 
+	VkAttachmentReference depthAttachmentRef{};
+	depthAttachmentRef.attachment = 1;
+	depthAttachmentRef.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;	
+
 	VkSubpassDescription subpass{
 		0, // flags - reserved for future use
 		VK_PIPELINE_BIND_POINT_GRAPHICS,
@@ -2062,7 +2080,7 @@ VkRenderPass initRenderPass(
 		1, // color attachment count
 		&colorReference, // color attachments
 		nullptr, // resolve attachments
-		nullptr, // depth stencil attachment
+		&depthAttachmentRef, // depth stencil attachment
 		0, // preserve attachment count
 		nullptr // preserve attachments
 	};
@@ -2077,6 +2095,9 @@ VkRenderPass initRenderPass(
 		VK_DEPENDENCY_BY_REGION_BIT, // dependencyFlags
 	};
 
+	srcDependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+	srcDependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+
 	// implicitly defined dependency would cover this, but let's replace it with this explicitly defined dependency!
 	VkSubpassDependency dstDependency{
 		0, // srcSubpass
@@ -2087,6 +2108,8 @@ VkRenderPass initRenderPass(
 		0, // dstAccessMask
 		VK_DEPENDENCY_BY_REGION_BIT, // dependencyFlags
 	};
+
+	dstDependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
 
 	VkSubpassDependency dependencies[] = {srcDependency, dstDependency};
 
@@ -2363,8 +2386,8 @@ VkPipeline initPipeline(
 		VK_FALSE, // depth clamp
 		VK_FALSE, // rasterizer discard
 		VK_POLYGON_MODE_FILL,
-		VK_CULL_MODE_BACK_BIT,
-		VK_FRONT_FACE_COUNTER_CLOCKWISE,
+		VK_CULL_MODE_FRONT_BIT,
+		VK_FRONT_FACE_CLOCKWISE,
 		VK_FALSE, // depth bias
 		0.0f, // bias constant factor
 		0.0f, // bias clamp
@@ -2372,7 +2395,7 @@ VkPipeline initPipeline(
 		1.0f // line width
 	};
 	
-	rasterizationState.cullMode = VK_CULL_MODE_BACK_BIT;
+	rasterizationState.cullMode = VK_CULL_MODE_NONE;
 	rasterizationState.frontFace = VK_FRONT_FACE_CLOCKWISE;
 
 	VkPipelineMultisampleStateCreateInfo multisampleState{
@@ -2415,11 +2438,11 @@ VkPipeline initPipeline(
 	depthStencilState.depthWriteEnable = VK_TRUE;	
 	depthStencilState.depthCompareOp = VK_COMPARE_OP_LESS;
 	depthStencilState.depthBoundsTestEnable = VK_FALSE;
-	depthStencilState.minDepthBounds = 0.0f;
-	depthStencilState.maxDepthBounds = 1.0f;
+	// depthStencilState.minDepthBounds = 0.0f;
+	// depthStencilState.maxDepthBounds = 1.0f;
 	depthStencilState.stencilTestEnable = VK_FALSE;
-	depthStencilState.front = {};
-	depthStencilState.back = {};	
+	// depthStencilState.front = {};
+	// depthStencilState.back = {};	
 
 	VkGraphicsPipelineCreateInfo pipelineInfo{
 		VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,
@@ -2589,7 +2612,7 @@ void recordBeginRenderPass(
 	renderPassInfo.renderPass = renderPass;
 	renderPassInfo.framebuffer = framebuffer;
 	renderPassInfo.renderArea =	{{0,0}, {width, height}};
-	renderPassInfo.clearValueCount = 1;
+	renderPassInfo.clearValueCount = 2;
 	renderPassInfo.pClearValues = clearValue;	
 
 	vkCmdBeginRenderPass( commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE );
