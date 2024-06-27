@@ -418,7 +418,7 @@ int start() try{
     auto descriptorSetLayout = createDescriptorSetLayout(device);
     auto descriptorPool = createDescriptorPool(device);
 	auto createTextureResult = createTextureImage(
-		"brick.texture.bmp",
+		"vulkan.texture.bmp",
 		device,
 		physicalDevice,
 		commandPool,
@@ -1296,12 +1296,12 @@ VkPhysicalDevice getPhysicalDevice( const VkInstance instance, const VkSurfaceKH
 			const VkPhysicalDeviceProperties pdp = getPhysicalDeviceProperties( pd );
 
 			if( pdp.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU ){
-#if VULKAN_VALIDATION
-				vkDebugReportMessageEXT(
-					instance, VK_DEBUG_REPORT_WARNING_BIT_EXT, VK_DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT, handleToUint64(instance), __LINE__, 
-					1, u8"application", u8"More than one Physical Devices (GPU) found. Choosing the first dedicated one."
-				);
-#endif
+// #if VULKAN_VALIDATION
+// 				vkDebugReportMessageEXT(
+// 					instance, VK_DEBUG_REPORT_WARNING_BIT_EXT, VK_DEBUG_REPORT_OBJECT_TYPE_INSTANCE_EXT, handleToUint64(instance), __LINE__, 
+// 					1, u8"application", u8"More than one Physical Devices (GPU) found. Choosing the first dedicated one."
+// 				);
+// #endif
 
 				return pd;
 			}

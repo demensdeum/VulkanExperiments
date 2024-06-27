@@ -322,7 +322,7 @@ VkFormat findDepthFormat(VkPhysicalDevice physicalDevice) {
 int start() try{
 	const uint32_t vertexBufferBinding = 0;
 
-	const std::vector<Vertex3D_UV> triangle = {
+	const std::vector<Vertex3D_UV> cube = {
 
 // Front face - два треугольника
 {{{-1.0f, -1.0f,  1.0f}}, {{0.0f, 1.0f}}}, // Bottom left
@@ -392,7 +392,7 @@ int start() try{
 		else throw "VULKAN_VALIDATION is enabled but VK_LAYER_LUNARG_assistant_layer layer is not supported!";
 	}
 #endif
-    const char *windowTitle = "Triangle - Vulkan";
+    const char *windowTitle = "Cube - Vulkan";
 
     SDL_Window *window = SDL_CreateWindow(
         windowTitle, 
@@ -516,7 +516,7 @@ int start() try{
     auto descriptorSetLayout = createDescriptorSetLayout(device);
     auto descriptorPool = createDescriptorPool(device);
 	auto createTextureResult = createTextureImage(
-		"brick.texture.bmp",
+		"vulkan.texture.bmp",
 		device,
 		physicalDevice,
 		commandPool,
@@ -550,7 +550,7 @@ int start() try{
 
 	VkPipelineLayout pipelineLayout = initPipelineLayout(device, descriptorSetLayout);
 
-	VkBuffer vertexBuffer = initBuffer( device, sizeof( decltype( triangle )::value_type ) * triangle.size(), VK_BUFFER_USAGE_VERTEX_BUFFER_BIT );
+	VkBuffer vertexBuffer = initBuffer( device, sizeof(decltype(cube)::value_type ) * cube.size(), VK_BUFFER_USAGE_VERTEX_BUFFER_BIT );
 	const std::vector<VkMemoryPropertyFlags> memoryTypePriority{
 		VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT | VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, // preferably wanna device-side memory that can be updated from host without hassle
 		VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT // guaranteed to allways be supported
@@ -561,7 +561,7 @@ int start() try{
 		vertexBuffer,
 		memoryTypePriority
 	);
-	setVertexData( device, vertexBufferMemory, triangle ); // Writes throug memory map. Synchronization is implicit for any subsequent vkQueueSubmit batches.
+	setVertexData( device, vertexBufferMemory, cube ); // Writes throug memory map. Synchronization is implicit for any subsequent vkQueueSubmit batches.
 
 	// might need synchronization if init is more advanced than this
 	//VkResult errorCode = vkDeviceWaitIdle( device ); RESULT_HANDLER( errorCode, "vkDeviceWaitIdle" );
@@ -729,7 +729,7 @@ int start() try{
 						nullptr
 					);
 
-					recordDraw(commandBuffers[i], static_cast<uint32_t>(triangle.size()));
+					recordDraw(commandBuffers[i], static_cast<uint32_t>(cube.size()));
 
 					recordEndRenderPass( commandBuffers[i] );
 				endCommandBuffer(commandBuffers[i]);
@@ -1103,12 +1103,12 @@ void updateUniformBuffer(VkDeviceMemory uniformBufferMemory, VkDevice device) {
     float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 
 	glm::mat4 model = glm::mat4(1.f);
-	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -10.0f));
+	model = glm::translate(model, glm::vec3(0.0f, 0.0f, -6.0f));
 	model = glm::rotate(model, time * glm::radians(90.0f), glm::vec3(0.5f, 1.0f, 0.4f));
 	glm::mat4 view = glm::mat4(1.f);
 
 	float aspect = (float) screenWidth / (float) screenHeight;
-    glm::mat4 proj = glm::perspective(glm::radians(45.0f), aspect, 0.001f, 100000.0f);
+    glm::mat4 proj = glm::perspective(glm::radians(45.0f), aspect, 0.00001f, 100000.0f);
     proj[1][1] *= -1; // Invert Y coordinate for Vulkan
 
     UniformBufferObject ubo{};
